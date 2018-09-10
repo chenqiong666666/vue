@@ -44,10 +44,15 @@ export default {
           login(this.loginForm).then((res) => {
             console.log(res)
             if (res.meta.status === 200) {
-              this.$message({
-                message: res.meta.msg,
-                type: 'success'
-              })
+              // console.log(this)
+              // console.log(this.$store.state.username)
+              // this.$message({
+              //   message: res.meta.msg,
+              //   type: 'success'
+
+              // })
+              // this.$store.state.username = res.data.username
+              localStorage.setItem('myusername', res.data.username)
               localStorage.setItem('mytoken', res.data.token)
               this.$router.push({name: 'Home'})
             } else {

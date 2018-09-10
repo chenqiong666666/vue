@@ -3,38 +3,17 @@
     <el-container>
       <el-aside width="auto">
         <div class="logo"></div>
-        <el-menu default-active="1-1" :collapse='collapse' :unique-opened="true" class="el-menu-admin" @open="handleOpen" @close="handleClose" background-color="#545c64" text-color="#fff" active-text-color="#ffd04b" :router='true'>
-          <el-submenu index="1">
-            <template slot="title">
+        <el-menu  :collapse='collapse' :unique-opened="true" class="el-menu-admin" @open="handleOpen" @close="handleClose" background-color="#545c64" text-color="#fff" active-text-color="#ffd04b" :router='true'>
+          <el-submenu :index="item.id+''" v-for="item in leftlist" :key="item.id">
+            <template slot="title"  >
               <i class="el-icon-location"></i>
-              <span>用户管理</span>
+              <span>{{item.authName}}</span>
             </template>
-            <el-menu-item index="user">
+            <el-menu-item :index="subitem.path" v-for="subitem in item.children" :key="subitem.id" >
               <i class="el-icon-menu"></i>
-              <span slot="title">用户列表</span>
+              <span slot="title">{{subitem.authName}}</span>
             </el-menu-item>
           </el-submenu>
-          <el-submenu index="2">
-            <template slot="title">
-              <i class="el-icon-location"></i>
-              <span>用户管理</span>
-            </template>
-            <el-menu-item index="2-2">
-              <i class="el-icon-menu"></i>
-              <span slot="title">用户列表</span>
-            </el-menu-item>
-          </el-submenu>
-          <el-submenu index="3">
-            <template slot="title">
-              <i class="el-icon-location"></i>
-              <span>权限管理</span>
-            </template>
-            <el-menu-item index="3-3">
-              <i class="el-icon-menu"></i>
-              <span slot="title">用户列表</span>
-            </el-menu-item>
-          </el-submenu>
-
         </el-menu>
       </el-aside>
       <el-container>
@@ -42,7 +21,7 @@
           <span class=" myicon myicon-menu toggle-btn" @click="collapse=!collapse"></span>
           <span class="system-title ">电商后台管理系统</span>
           <div class="welcome">
-            <span>你好:admin</span>
+            <span>你好:{{username}}</span>
             <el-button type="text" @click="loginout">退出</el-button>
           </div>
         </el-header>
@@ -57,11 +36,22 @@
 </template>
 
 <script>
+import {getleftmenu} from '@/api/index.js'
 export default {
   data () {
     return {
-      collapse: false
+      collapse: false,
+      leftlist: [],
+      username: ''
     }
+  },
+  mounted () {
+    getleftmenu().then(res => {
+      console.log(res)
+      this.leftlist = res.data
+      console.log(this.leftlist)
+      this.username = localStorage.getItem('myusername')
+    })
   },
   methods: {
     // 退出登录
